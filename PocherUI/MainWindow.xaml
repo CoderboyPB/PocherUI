@@ -1,0 +1,58 @@
+﻿<Window x:Class="PocherUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PocherUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="320" Width="480">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="1,1" MappingMode="RelativeToBoundingBox" StartPoint="0,0">
+            <GradientStop Color="Black"/>
+            <GradientStop Color="#FFFFB900" Offset="0.996"/>
+            <GradientStop Color="#FF2704FF"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Oliver Pocher Podcast Download"
+                   FontWeight="Bold" FontSize="18" Margin="0 0 0 5" Foreground="#f0f0f0"
+                   Grid.Column="1" Grid.Row="1"/>
+
+        <Border Padding="1" Background="#333333" Grid.Row="2" Grid.Column="1">
+            <ScrollViewer Height="150" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
+                <DataGrid ItemsSource="{Binding Files}" 
+                      AutoGenerateColumns="False" CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      AlternatingRowBackground="#EEEEEE">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Podcast Titel" 
+                                        Binding="{Binding Title}"
+                                        Foreground="#333333"/>
+                        <DataGridCheckBoxColumn Header="Runterladen" Binding="{Binding Download}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </ScrollViewer>
+        </Border>
+        <StackPanel Grid.Row="3" Grid.Column="1" Margin="0 5 0 0">
+            <TextBlock Text="Download Verzeichnis:" Foreground="#f0f0f0"/>
+            <TextBlock Text="{Binding DD}" Foreground="#e0e0e0"/>
+            <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                <Button Padding="3" Width="auto" Name="change" Click="change_Click">Wechseln</Button>
+                <Button Name="download" Click="download_Click" Padding="3" Width="auto" Margin="10 0 0 0">Download</Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
