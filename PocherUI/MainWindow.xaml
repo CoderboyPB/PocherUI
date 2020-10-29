@@ -5,12 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PocherUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="320" Width="480">
+        Title="Pocher Podcast Download" Height="320" Width="480">
     <Window.Background>
         <LinearGradientBrush EndPoint="1,1" MappingMode="RelativeToBoundingBox" StartPoint="0,0">
-            <GradientStop Color="Black"/>
-            <GradientStop Color="#FFFFB900" Offset="0.996"/>
-            <GradientStop Color="#FF2704FF"/>
+            <GradientStop Color="#0000ff" Offset="1"/>
+            <GradientStop Color="#000000"/>
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
@@ -35,12 +34,27 @@
             <ScrollViewer Height="150" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
                 <DataGrid ItemsSource="{Binding Files}" 
                       AutoGenerateColumns="False" CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      AlternatingRowBackground="#EEEEEE">
+                      CanUserDeleteRows="False">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Status}" Value="Undefined">
+                                    <Setter Property="Background" Value="#eeeeee"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="Loading">
+                                    <Setter Property="Background" Value="yellow"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="Loaded">
+                                    <Setter Property="Background" Value="lime"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Podcast Titel" 
                                         Binding="{Binding Title}"
-                                        Foreground="#333333"/>
+                                        Foreground="#333333">
+                        </DataGridTextColumn>
                         <DataGridCheckBoxColumn Header="Runterladen" Binding="{Binding Download}"/>
                     </DataGrid.Columns>
                 </DataGrid>

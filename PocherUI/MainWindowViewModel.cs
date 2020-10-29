@@ -26,7 +26,6 @@ namespace PocherUI
             var client = new WebClient();
             Byte[] pageData = client.DownloadData("https://audionow.de/podcast/die-pochers-hier");
             string html = Encoding.UTF8.GetString(pageData);
-            //var html = client.DownloadString("https://audionow.de/podcast/die-pochers-hier");
 
             var matchesCollection = Regex.Matches(html, "<div class=\"podcast-episode.*>");
             foreach (Match match in matchesCollection)
@@ -36,7 +35,7 @@ namespace PocherUI
                 var url = Regex.Match(match.Value, "https:(.+).mp3").Value;
 
                 if(!string.IsNullOrWhiteSpace(title))
-                    Files.Add(new FileModel { Title = title, URL = url, Download = false });
+                    Files.Add(new FileModel { Title = title, URL = url, Download = false, Status = DownloadStatus.Undefined });
             }
         }
 
@@ -53,8 +52,6 @@ namespace PocherUI
                 OnNotifyChanged(nameof(DD));
             }
         }
-
-
 
         private void OnNotifyChanged(string propertyName)
         {

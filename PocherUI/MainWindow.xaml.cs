@@ -36,6 +36,7 @@ namespace PocherUI
         }
 
         public MainWindowViewModel ViewModel { get; set; } = new MainWindowViewModel();
+        WebClient client = new WebClient();
 
         private void change_Click(object sender, RoutedEventArgs e)
         {
@@ -52,20 +53,24 @@ namespace PocherUI
 
         private void download_Click(object sender, RoutedEventArgs e)
         {
-            var client = new WebClient();
+            var list = ViewModel.Files.Where(f => f.Download).ToList();
+            Thread t = new Thread(new ThreadStart(() => Download(client, list)));
+            t.Start();
+        }
+
+        private void Download(WebClient client, List<FileModel> downloadList)
+        {
             string title;
-
-            var downloadList = ViewModel.Files.Where(f => f.Download).ToList();
-            foreach(var file in downloadList)
+            
+            foreach (var file in downloadList)
             {
-                title = System.IO.Path.Combine(ViewModel.DD, $"{file.Title}.mp3");
-                Task.Run(() =>
-                {
-                    client.DownloadFile(new Uri(file.URL), title);
-                });
-            }
+                var currentFile = ViewModel.Files.Where(f => f.Title == file.Title).FirstOrDefault();
 
-            //System.Windows.MessageBox.Show("Ready");
+                currentFile.Status = DownloadStatus.Loading;
+                title = System.IO.Path.Combine(ViewModel.DD, $"{file.Title}.mp3");
+                client.DownloadFile(new Uri(file.URL), title);
+                currentFile.Status = DownloadStatus.Loaded;
+            }
         }
     }
 }
