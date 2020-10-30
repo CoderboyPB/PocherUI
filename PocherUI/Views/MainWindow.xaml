@@ -1,17 +1,24 @@
-﻿<Window x:Class="PocherUI.MainWindow"
+﻿<Window x:Class="PocherUI.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PocherUI"
+        xmlns:ivc="clr-namespace:PocherUI.Converters"
         mc:Ignorable="d"
         Title="Pocher Podcast Download" Height="320" Width="480">
+    <Window.Resources>
+        <ivc:LoadinStatus2TaskBarConverter x:Key="Load2Task"/>
+    </Window.Resources>
     <Window.Background>
         <LinearGradientBrush EndPoint="1,1" MappingMode="RelativeToBoundingBox" StartPoint="0,0">
-            <GradientStop Color="#0000ff" Offset="1"/>
+            <GradientStop Color="#0000cc" Offset="1"/>
             <GradientStop Color="#000000"/>
         </LinearGradientBrush>
     </Window.Background>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo ProgressState="{Binding Path=IsDownloading, Converter={StaticResource Load2Task}}"/>
+    </Window.TaskbarItemInfo>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
@@ -64,8 +71,8 @@
             <TextBlock Text="Download Verzeichnis:" Foreground="#f0f0f0"/>
             <TextBlock Text="{Binding DD}" Foreground="#e0e0e0"/>
             <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
-                <Button Padding="3" Width="auto" Name="change" Click="change_Click">Wechseln</Button>
-                <Button Name="download" Click="download_Click" Padding="3" Width="auto" Margin="10 0 0 0">Download</Button>
+                <Button Padding="3" Width="auto" Command="{Binding ChangeCommand}">Wechseln</Button>
+                <Button Name="download" Command="{Binding DownloadCommand}" Padding="3" Width="auto" Margin="10 0 0 0">Download</Button>
             </StackPanel>
         </StackPanel>
     </Grid>

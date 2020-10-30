@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PocherUI
+namespace PocherUI.Models
 {
     public class FileModel : INotifyPropertyChanged
     {
@@ -20,14 +20,13 @@ namespace PocherUI
             set 
             {  
                 _status = value;
-                ONC(nameof(Status));
+                OnPropertyChanged(nameof(Status));
             }
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void ONC(string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
