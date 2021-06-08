@@ -1,6 +1,7 @@
 ﻿using PocherUI.Commands;
 using PocherUI.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -52,19 +53,31 @@ namespace PocherUI.ViewModels
         #endregion
         private void LoadFiles()
         {
+            var urlList = new ArrayList();
+            var titleList = new ArrayList();
+
             var client = new WebClient();
             Byte[] pageData = client.DownloadData("https://audionow.de/podcast/die-pochers-hier");
             string html = Encoding.UTF8.GetString(pageData);
 
-            var matchesCollection = Regex.Matches(html, "<div class=\"podcast-episode.*>");
+            var urlMatchesCollection = Regex.Matches(html, @"http[\S]*.mp3");
+            foreach (Match match in urlMatchesCollection)
+            {
+                urlList.Add(match.Value);
+            }
+
+            var matchesCollection = Regex.Matches(html, "data-audiotitle=\"[\\d]* - [\\w\\säöüÄÖÜß\\!\\?\\.\\+\\*\\-\\:\\#\\,\\;]*\"");
             foreach (Match match in matchesCollection)
             {
+                var title = match.Value.Split('=')[1];
+                titleList.Add(title.Substring(1,title.Length-2));
+            }
 
-                var title = Regex.Match(match.Value, @"\d+ - ([\w\süöäß]+)").Value;
-                var url = Regex.Match(match.Value, "https:(.+).mp3").Value;
-
-                if (!string.IsNullOrWhiteSpace(title))
-                    Files.Add(new FileModel { Title = title, URL = url, Download = false, Status = DownloadStatus.Undefined });
+            int index = 0;
+            foreach(var url in urlList)
+            {
+                Files.Add(new FileModel { Title = (string)titleList[index], URL = (string)url, Download = false, Status = DownloadStatus.Undefined });
+                index++;
             }
         }
 
