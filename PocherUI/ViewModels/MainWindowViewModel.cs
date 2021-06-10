@@ -60,13 +60,13 @@ namespace PocherUI.ViewModels
             Byte[] pageData = client.DownloadData("https://audionow.de/podcast/die-pochers-hier");
             string html = Encoding.UTF8.GetString(pageData);
 
-            var urlMatchesCollection = Regex.Matches(html, @"http[\S]*.mp3");
+            var urlMatchesCollection = Regex.Matches(html, @"http.*mp3");
             foreach (Match match in urlMatchesCollection)
             {
                 urlList.Add(match.Value);
             }
 
-            var matchesCollection = Regex.Matches(html, "data-audiotitle=\"[\\d]* - [\\w\\säöüÄÖÜß\\!\\?\\.\\+\\*\\-\\:\\#\\,\\;]*\"");
+            var matchesCollection = Regex.Matches(html, "data-audiotitle=\".*\"");
             foreach (Match match in matchesCollection)
             {
                 var title = match.Value.Split('=')[1];

@@ -43,7 +43,7 @@
 
         <Border Padding="1" Background="Transparent" Grid.Row="2" Grid.Column="1" Width="400" HorizontalAlignment="Left">
             <ScrollViewer Height="150" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible" Opacity="0.5">
-                <DataGrid ItemsSource="{Binding Files}" Background="Transparent"
+                <DataGrid ItemsSource="{Binding Files}" Background="Transparent" Name="dataGrid"
                       AutoGenerateColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False">
                     <DataGrid.RowStyle>
