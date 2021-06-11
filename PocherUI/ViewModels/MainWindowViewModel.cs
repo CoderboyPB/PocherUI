@@ -57,20 +57,37 @@ namespace PocherUI.ViewModels
             var titleList = new ArrayList();
 
             var client = new WebClient();
-            Byte[] pageData = client.DownloadData("https://audionow.de/podcast/die-pochers-hier");
+            Byte[] pageData = client.DownloadData("https://www.deezer.com/de/show/57033");
             string html = Encoding.UTF8.GetString(pageData);
 
-            var urlMatchesCollection = Regex.Matches(html, @"http.*mp3");
+            var urlMatchesCollection = Regex.Matches(html, @"EPISODE_DIRECT_STREAM_URL.:.[\w:\\/\.]*mp3");
             foreach (Match match in urlMatchesCollection)
             {
-                urlList.Add(match.Value);
+                var url = $"{match.Value.Split(':')[1]}:{match.Value.Split(':')[2]}";
+                url = url.Replace("\\","");
+                url = url.Remove(0,1);
+                urlList.Add(url);
             }
 
-            var matchesCollection = Regex.Matches(html, "data-audiotitle=\".*\"");
+            var matchesCollection = Regex.Matches(html, @"EPISODE_TITLE.:.#\d*[\s\w\\\(/\)]*");
             foreach (Match match in matchesCollection)
             {
-                var title = match.Value.Split('=')[1];
-                titleList.Add(title.Substring(1,title.Length-2));
+                var title = match.Value.Split(':')[1];
+                title = title.Remove(0,1);
+                title = title.Replace("\\","");
+                title = title.Replace("/","-");
+
+                var character = Regex.Match(title, "u00\\w{2}").Value;
+
+                if(character != string.Empty)
+                {
+                    character = $"0x{character.Remove(0,1)}";
+                    int iCharacter = Convert.ToInt32(character, 16);
+                    string c = ((char)iCharacter).ToString();
+                    title = Regex.Replace(title, "u00\\w{2}", c);
+                }
+                
+                titleList.Add(title);
             }
 
             int index = 0;
